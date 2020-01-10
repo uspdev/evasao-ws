@@ -17,6 +17,14 @@ Instale as dependências do composer
 
     composer install
 
+## Utilização
+
+Os endpoits retornam json por padrão mas é possivel retornar outro formato
+* csv = para uso no excel
+* json = json formatado
+
+http://servidor/endpoint?format=csv
+
 ## Endpoints
 
 * status	"http://143.107.233.112/git/uspdev/evasao-ws/public/status"
