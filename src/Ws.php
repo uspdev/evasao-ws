@@ -16,11 +16,9 @@ class Ws
     /**
      * listarIngressantes - lista ingressantes nos colegiados definidos no ambiente
      *
-     * Sistema evasão
+     * @param  Int $ano - Ano a ser listado (formato YYYY)
      *
-     * @param  int $ano - Ano a ser listado (YYYY)
-     *
-     * @return void
+     * @return Array
      */
     public function listarIngressantes($ano)
     {
@@ -66,17 +64,13 @@ class Ws
         return $ret;
     }
 
-        /**
-     * <p>
-     * Método que retorna as respostas de determinado aluno no questionário Fuvest
-     *
-     * </p>
-     *
+    /**
+     * listarRespostasQuestionarioFuvest - Método que retorna as respostas de determinado aluno no questionário Fuvest
      *
      * @param $nusp número USP do aluno
      * @param $codqtn codigo do questionário das perguntas
-     * @param $ids arrays com ids de perguntas
-     * @return array com as perguntas e respostas
+     * 
+     * @return Array com as perguntas e respostas
      */
     public function listarRespostasQuestionarioFuvest($nusp, $codqtn = 0)
     {
@@ -120,6 +114,13 @@ class Ws
         return $ret;
     }
 
+    /**
+     * listarHabilitacoes - Lista as habilitações associadas a determinado aluno
+     *
+     * @param  Int $codpes - Número USp do aluno
+     *
+     * @return Array
+     */
     public function listarHabilitacoes($codpes)
     {
         $sql = "SELECT c.nomcur, hg.nomhab, cl.nomabvclg ,h.*
@@ -150,6 +151,14 @@ class Ws
         return $ret;
     }
 
+    /**
+     * obterHistorico - Retorna a lista de disciplinas cursadas por determinado aluno
+     *
+     * @param  Int $codpes
+     * @param  Int $codpgm
+     *
+     * @return Array
+     */
     public function obterHistorico($codpes, $codpgm = 0)
     {
         $codpgm = ($codpgm) ? $codpgm : SELF::listarProgramasHistorico($codpes);
@@ -207,6 +216,7 @@ class Ws
         return $list;
     }
 
+    // Conforme documentação do replicado
     private static function statusPrograma($stapgm)
     {
         $stapgm_desc['A'] = "Ativo - programa em andamento";
@@ -220,7 +230,7 @@ class Ws
         return $stapgm_desc[$stapgm];
     }
 
-        // todas as informacoes da resposta mais a pergunta textual e a resposta textual
+    // todas as informacoes da resposta mais a pergunta textual e a resposta textual
     // pode ter mais de um questionario respondido então vem ordenado por dtaini para podeseparar
     private static function listarRespostas($codpes, $codqtn = 0)
     {
@@ -240,13 +250,11 @@ class Ws
         ORDER BY h.dtaini, a.codqtn, a.codqst";
 
         return DB::fetchAll($sql);
-
-        //print_r($query->fetchAll(\PDO::FETCH_ASSOC));exit;
-        //return $query->fetchAll(\PDO::FETCH_OBJ);
     }
 
 
-// vai morrer provavelmente
+    // vai morrer provavelmente
+    // pois retorna o codqtn mas ele não serve para diferenciar pois um mesmo codqtn serve para vários anos
 
     private static function listarQuestionariosRespondidos($codpes)
     {
