@@ -25,9 +25,9 @@ class Ws
     public function listarIngressantes($ano)
     {
         if (!$ano) {
-            return ['msg'=>'É necessário definir ano'];
+            return [];
         }
-        
+
         $codclg = getenv('CODCLG');
 
         $sql = "SELECT *
