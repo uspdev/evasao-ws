@@ -22,14 +22,13 @@ Flight::route('/', function () use ($ws) {
             $p .= '{' . $param->getName() . '}, ';
         }
         $p = substr($p,0,-2);
-        
+
         // vamos apresentar na forma de url
         $api[$m] = getenv('DOMINIO') . '/' . $m . $p;
     }
     Flight::jsonf($api);
 });
 
-define('USPDEV_CACHE_DISABLE', true);
 // vamos mapear todas as rotas para o controller padrão
 Flight::route('GET /@metodo:[a-z]+(/@param1)', function ($metodo, $param1) use ($c) {
 
