@@ -23,4 +23,4 @@ Instale as dependências do composer
 * listarIngressantes	"http://143.107.233.112/git/uspdev/evasao-ws/public/listarIngressantes/{ano}"
 * listarRespostasQuestionarioFuvest	"http://143.107.233.112/git/uspdev/evasao-ws/public/listarRespostasQuestionarioFuvest/{nusp}, {codqtn}"
 * listarHabilitacoes	"http://143.107.233.112/git/uspdev/evasao-ws/public/listarHabilitacoes/{codpes}"
-obterHistorico	"http://143.107.233.112/git/uspdev/evasao-ws/public/obterHistorico/{codpes}, {codpgm}"
+* obterHistorico	"http://143.107.233.112/git/uspdev/evasao-ws/public/obterHistorico/{codpes}, {codpgm}"
