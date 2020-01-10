@@ -4,13 +4,20 @@ require_once __DIR__ . '/../vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
-# Variáveis obrigatórias
-$dotenv->required('REPLICADO_HOST')->notEmpty();
-
 # Enquanto não adequamos o cache para env vamos definir a constante que
 # desabilita aqui. Pois em fase de teste não queremos usar cache
 define('USPDEV_CACHE_DISABLE', true);
 
+if(getenv('AMBIENTE') == 'dev') {
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+    //Flight::set('flight.handle_errors', false);
+};
+
+# Variáveis obrigatórias
+$dotenv->required('REPLICADO_HOST')->notEmpty();
+$dotenv->required('CODCLG')->notEmpty();
 
 // vamos ajustar os caminhos baseados no arquivo de configuracao
 // dessa forma não precisamos recorrer ao RewriteBase do apache
