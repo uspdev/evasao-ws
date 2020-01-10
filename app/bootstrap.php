@@ -7,10 +7,6 @@ $dotenv->load();
 # Variáveis obrigatórias
 $dotenv->required('REPLICADO_HOST')->notEmpty();
 
-# Instanciando biblioteca de cache
-use Uspdev\Cache\Cache;
-$c = new Cache();
-
 // vamos ajustar os caminhos baseados no arquivo de configuracao
 // dessa forma não precisamos recorrer ao RewriteBase do apache
 // e podemos usar um .htaccess que não depende do deploy
