@@ -59,6 +59,60 @@ class Ws
         return $ret;
     }
 
+        /**
+     * <p>
+     * Método que retorna as respostas de determinado aluno no questionário Fuvest
+     *
+     * </p>
+     *
+     *
+     * @param $nusp número USP do aluno
+     * @param $codqtn codigo do questionário das perguntas
+     * @param $ids arrays com ids de perguntas
+     * @return array com as perguntas e respostas
+     */
+    public function listarRespostasQuestionarioFuvest($nusp, $codqtn = 0, $ids = null)
+    {
+        //$codqtn = 309;
+        // aqui é para saber quantos questionários foram respondidos
+        if (empty($codqtn)) {
+            $questionarios = SELF::listarQuestionariosRespondidos($nusp);
+        } else {
+            $questionarios = json_decode(json_encode([['codqtn' => $codqtn]]), false);
+        }
+        //print_r($questionarios);exit;
+
+        $ret = [];
+        foreach ($questionarios as $q) {
+            $arr = [];
+            $respostas = SELF::listarRespostas($nusp, $codqtn);
+
+            foreach ($respostas as $r) {
+                $arr['identificacao'] = $nusp;
+                $arr['cod_questionario'] = $r['codqtn'];
+                $arr['ano_ingresso'] = substr($r['dtaini'], 0, 4);
+                $arr['cod_curso'] = $r['codcur'];
+                $arr['cod_habilitacao'] = $r['codhab'];
+                $arr['cod_programa'] = $r['codpgm'];
+                $arr['cod_questionario'] = $r['codqtn'];
+                $arr['cod_questao'] = $r['codqst'];
+                $arr['questao'] = $r['dscqst'];
+                $arr['cod_resposta'] = $r['numatnqst'];
+                $arr['resposta'] = $r['dscatn'];
+                $arr['pontos_soc_eco'] = $r['qtdptosoceco'] ? $r['qtdptosoceco'] : 0;
+                $arr['respposta_alt'] = $r['rpaatn'];
+                $arr['status_texto_compl'] = $r['statxtcpl'];
+                $arr['texto_compl_resp'] = $r['txtcplrpa'];
+                $arr['dtarpa'] = $r['dtarpa'];
+                $arr['numseqsrv'] = $r['numseqsrv'];
+
+                $ret1[] = $arr;
+            }
+            $ret[] = $ret1;
+        }
+        return $ret;
+    }
+
     public function listarHabilitacoes($codpes)
     {
         $sql = "SELECT c.nomcur, hg.nomhab, cl.nomabvclg ,h.*
@@ -157,5 +211,43 @@ class Ws
         $stapgm_desc['H'] = "Histórico - indica qualquer situação de Histórico que não se refira a alteração de estado do programa";
         $stapgm_desc['EH'] = "Encerramento de Habilitação";
         return $stapgm_desc[$stapgm];
+    }
+
+        // todas as informacoes da resposta mais a pergunta textual e a resposta textual
+    // pode ter mais de um questionario respondido então vem ordenado por dtaini para podeseparar
+    private static function listarRespostas($codpes, $codqtn = 0)
+    {
+        //$codqtn_sql = $codqtn ? " AND r.codqtn = " . $codqtn : '';
+        $sql = "SELECT *
+        FROM RESPOSTASQUESTAO AS r
+		INNER JOIN ALTERNATIVAQUESTAO AS a
+            ON r.codqtn = a.codqtn AND r.numatnqst = a.numatnqst AND r.codqst = a.codqst
+        INNER JOIN QUESTOESPESQUISA as q
+            ON r.codqtn = q.codqtn AND r.codqst = q.codqst
+        INNER JOIN PROGRAMAGR AS p
+            ON r.codpes = p.codpes
+        INNER JOIN HABILPROGGR AS h
+      		ON r.codpes = h.codpes AND DATEPART(YEAR, p.dtaing) = DATEPART(YEAR, h.dtaini)
+        WHERE r.codpes =  $codpes
+        AND tiping = 'Vestibular'
+        ORDER BY h.dtaini, a.codqtn, a.codqst";
+
+        return DB::fetchAll($sql);
+
+        //print_r($query->fetchAll(\PDO::FETCH_ASSOC));exit;
+        //return $query->fetchAll(\PDO::FETCH_OBJ);
+    }
+
+
+// vai morrer provavelmente
+
+    private static function listarQuestionariosRespondidos($codpes)
+    {
+        $sql = 'SELECT DISTINCT codqtn
+        FROM respostasquestao
+        WHERE codpes = :codpes';
+        $params['codpes'] = $codpes;
+
+        return DB::fetchAll($sql, $params);
     }
 }
