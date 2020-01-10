@@ -5,9 +5,12 @@ use Uspdev\Replicado\Uteis;
 
 class Ws
 {
-    public static function listarColegiados()
+    public static function status()
     {
-        return ['colegiados' => getenv('CODCLG')];
+        $out['colegiados'] = getenv('CODCLG');
+        $out['cache'] = getenv('USPDEV_CACHE_DISABLE') ? 'desabilitado': 'habilitado';
+
+        return $out;
     }
 
     /**
@@ -71,7 +74,7 @@ class Ws
      * @param $ids arrays com ids de perguntas
      * @return array com as perguntas e respostas
      */
-    public function listarRespostasQuestionarioFuvest($nusp, $codqtn = 0, $ids = null)
+    public function listarRespostasQuestionarioFuvest($nusp, $codqtn = 0)
     {
         //$codqtn = 309;
         // aqui é para saber quantos questionários foram respondidos
