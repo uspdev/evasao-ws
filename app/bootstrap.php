@@ -7,12 +7,16 @@ $dotenv->load();
 # Variáveis obrigatórias
 $dotenv->required('REPLICADO_HOST')->notEmpty();
 
+# Enquanto não adequamos o cache para env vamos definir a constante que
+# desabilita aqui. Pois em fase de teste não queremos usar cache
+define('USPDEV_CACHE_DISABLE', true);
+
+
 // vamos ajustar os caminhos baseados no arquivo de configuracao
 // dessa forma não precisamos recorrer ao RewriteBase do apache
 // e podemos usar um .htaccess que não depende do deploy
 Flight::request()->base = parse_url(getenv('DOMINIO'), PHP_URL_PATH);
 Flight::request()->url = str_replace(Flight::request()->base, '', Flight::request()->url);
-
 
 // vamos imprimir o json formatado para humanos lerem
 Flight::map('jsonf', function ($data) {
