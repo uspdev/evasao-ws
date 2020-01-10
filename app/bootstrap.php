@@ -20,7 +20,7 @@ Flight::request()->url = str_replace(Flight::request()->base, '', Flight::reques
 
 // vamos imprimir o json formatado para humanos lerem
 Flight::map('jsonf', function ($data) {
-    Flight::json($data, 200, true, 'utf-8', JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    Flight::json($data, 200, true, 'utf-8', JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 });
 
 // vamos imprimir a saida em csv
