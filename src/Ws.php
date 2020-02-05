@@ -5,10 +5,35 @@ use Uspdev\Replicado\Uteis;
 
 class Ws
 {
+    public function documentacao()
+    {
+        $ws = new SELF;
+        $metodos = get_class_methods($ws);
+
+        foreach ($metodos as $m) {
+            // para cada método vamos obter os parâmetros
+            $r = new \ReflectionMethod($ws, $m);
+            $params = $r->getParameters();
+
+            // vamos listar somente os métodos publicos
+            if ($r->isPublic()) {
+                $p = '/';
+                foreach ($params as $param) {
+                    $p .= '{' . $param->getName() . '}, ';
+                }
+                $p = substr($p, 0, -2);
+
+                // vamos apresentar na forma de url
+                $api[$m] = getenv('DOMINIO') . '/evasao/' . $m . $p;
+            }
+        }
+        return $api;
+    }
+
     public static function status()
     {
         $out['colegiados'] = getenv('CODCLG');
-        $out['cache'] = getenv('USPDEV_CACHE_DISABLE') ? 'desabilitado': 'habilitado';
+        $out['cache'] = getenv('USPDEV_CACHE_DISABLE') ? 'desabilitado' : 'habilitado';
 
         return $out;
     }
@@ -69,7 +94,7 @@ class Ws
      *
      * @param $nusp número USP do aluno
      * @param $codqtn codigo do questionário das perguntas
-     * 
+     *
      * @return Array com as perguntas e respostas
      */
     public function listarRespostasQuestionarioFuvest($nusp, $codqtn = 0)
@@ -251,7 +276,6 @@ class Ws
 
         return DB::fetchAll($sql);
     }
-
 
     // vai morrer provavelmente
     // pois retorna o codqtn mas ele não serve para diferenciar pois um mesmo codqtn serve para vários anos
