@@ -115,6 +115,37 @@ class Evasao
     }
 
     /**
+     * obterHistorico - Retorna a lista de disciplinas cursadas por determinado aluno
+     *
+     * @param  Int $codpes
+     * @param  Int $codpgm
+     *
+     * @return Array
+     */
+    public function obterHistorico($codpes, $codpgm = 0)
+    {
+        $codpgm = ($codpgm) ? $codpgm : SELF::listarProgramasHistorico($codpes);
+
+        $sql = "SELECT SUBSTRING(h.codtur, 1, 5) AS semestre, *
+        FROM histescolargr AS h
+        WHERE codpes= :codpes
+            AND codpgm = :codpgm
+        ORDER BY codpgm, semestre, dtacrihst";
+
+        $param['codpes'] = $codpes;
+        $param['codpgm'] = $codpgm;
+
+        $list = DB::fetchAll($sql, $param);
+        $list = Uteis::trim_recursivo($list);
+        $ret = [];
+        foreach ($list as $row) {
+            unset($row['timestamp']);
+            $ret[] = $row;
+        }
+        return $ret;
+    }
+
+    /**
      * listarHabilitacoes - Lista as habilitações associadas a determinado aluno
      *
      * @param  Int $codpes - Número USp do aluno
@@ -146,37 +177,6 @@ class Evasao
                 $row['stapgm'] = $programagr['stapgm'];
                 $row['status_programa'] = SELF::statusPrograma($programagr['stapgm']);
             }
-            $ret[] = $row;
-        }
-        return $ret;
-    }
-
-    /**
-     * obterHistorico - Retorna a lista de disciplinas cursadas por determinado aluno
-     *
-     * @param  Int $codpes
-     * @param  Int $codpgm
-     *
-     * @return Array
-     */
-    public function obterHistorico($codpes, $codpgm = 0)
-    {
-        $codpgm = ($codpgm) ? $codpgm : SELF::listarProgramasHistorico($codpes);
-
-        $sql = "SELECT SUBSTRING(h.codtur, 1, 5) AS semestre, *
-        FROM histescolargr AS h
-        WHERE codpes= :codpes
-            AND codpgm = :codpgm
-        ORDER BY codpgm, semestre, dtacrihst";
-
-        $param['codpes'] = $codpes;
-        $param['codpgm'] = $codpgm;
-
-        $list = DB::fetchAll($sql, $param);
-        $list = Uteis::trim_recursivo($list);
-        $ret = [];
-        foreach ($list as $row) {
-            unset($row['timestamp']);
             $ret[] = $row;
         }
         return $ret;
