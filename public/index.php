@@ -21,7 +21,7 @@ Flight::route('/', function () use ($controllers) {
 Flight::route('GET /@controlador:[a-z]+(/@metodo:[a-z]+(/@param1))',
     function ($controlador, $metodo, $param1) use ($controllers) {
 
-        // se o controladro passado nao existe
+        // se o controlador passado nao existe
         if (empty($controllers[$controlador])) {
             Flight::notFound('Controlador inexistente');
         }
