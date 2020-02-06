@@ -106,12 +106,12 @@ class Ws
         } else {
             $questionarios = json_decode(json_encode([['codqtn' => $codqtn]]), false);
         }
-        //print_r($questionarios);exit;
+        //print_r($questionarios);//exit;
 
         $ret = [];
         foreach ($questionarios as $q) {
             $arr = [];
-            $respostas = SELF::listarRespostas($nusp, $codqtn);
+            $respostas = SELF::listarRespostas($nusp, $q['codqtn']);
 
             foreach ($respostas as $r) {
                 $arr['identificacao'] = $nusp;
@@ -270,11 +270,14 @@ class Ws
             ON r.codpes = p.codpes
         INNER JOIN HABILPROGGR AS h
       		ON r.codpes = h.codpes AND DATEPART(YEAR, p.dtaing) = DATEPART(YEAR, h.dtaini)
-        WHERE r.codpes =  $codpes
-        AND tiping = 'Vestibular'
+        WHERE r.codpes =  :codpes
+            AND r.codqtn = CONVERT(int,:codqtn)
+        -- AND tiping = 'Vestibular' -- pode ser transferencia então não vamos filtrar isso
         ORDER BY h.dtaini, a.codqtn, a.codqst";
 
-        return DB::fetchAll($sql);
+        $params['codpes'] = $codpes;
+        $params['codqtn'] = $codqtn;
+        return DB::fetchAll($sql, $params);
     }
 
     // vai morrer provavelmente
