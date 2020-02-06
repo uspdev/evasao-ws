@@ -1,5 +1,5 @@
 <?php
-# lista de controllers disponiveis
+# lista de controllers disponiveis, incluindo namespaces.
 
-//$controllers['ws'] = 'Uspdev\Evasao\Controller\Ws';
-$controllers['evasao'] = 'Uspdev\Evasao\Ws';
+$controllers['ws'] = 'Uspdev\Evasao\Ws';
+$controllers['evasao'] = 'Uspdev\Evasao\Evasao';

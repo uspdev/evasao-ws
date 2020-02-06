@@ -1,6 +1,7 @@
 <?php
-
 require_once '../app/bootstrap.php';
+
+use Uspdev\Evasao\Ws;
 
 // Controller padrão
 //$ws = new Uspdev\Evasao\Ws;
@@ -25,12 +26,14 @@ Flight::route('GET /@controlador:[a-z]+(/@metodo:[a-z]+(/@param1))',
             Flight::notFound('Controlador inexistente');
         }
 
+        $ctrl = new $controllers[$controlador];
+
         // se nao foi passado metodo vamos mostrar a lista de metodos
         if (empty($metodo)) {
-            $metodo = 'documentacao';
+            $out = Ws::metodos($ctrl);
+            Flight::jsonf($out);
+            exit;
         }
-
-        $ctrl = new $controllers[$controlador];
 
         // se o método não existe
         if (!method_exists($ctrl, $metodo)) {
@@ -41,6 +44,7 @@ Flight::route('GET /@controlador:[a-z]+(/@metodo:[a-z]+(/@param1))',
         $c = new Uspdev\Cache\Cache($ctrl);
         $out = $c->getCached($metodo, [$param1]);
 
+        // vamos formatar de acordo com format=?
         $f = Flight::request()->query['format'];
         switch ($f) {
             case 'csv':
