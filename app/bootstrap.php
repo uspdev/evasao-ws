@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__.'/controllers.php';
+require_once __DIR__ . '/controllers.php';
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
@@ -9,12 +9,13 @@ $dotenv->load();
 # desabilita aqui. Pois em fase de teste não queremos usar cache
 define('USPDEV_CACHE_DISABLE', true);
 
-if(getenv('AMBIENTE') == 'dev') {
+if (getenv('AMBIENTE') == 'dev') {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
     //Flight::set('flight.handle_errors', false);
-};
+}
+;
 
 # Variáveis obrigatórias
 $dotenv->required('REPLICADO_HOST')->notEmpty();
@@ -33,18 +34,30 @@ Flight::map('jsonf', function ($data) {
 
 // vamos imprimir a saida em csv
 Flight::map('csv', function ($data) {
+
     header("Content-type: text/csv");
     header("Content-Disposition: inline; filename=file.csv");
     header("Pragma: no-cache");
     header("Expires: 0");
     $out = fopen('php://output', 'w');
-    fwrite($out,"\xEF\xBB\xBF");
-    $keys = array_keys($data[0]);
-    fputcsv($out, $keys, ';');
-    
-    foreach ($data as $row) {
-        fputcsv($out, $row, ';');
+    fwrite($out, "\xEF\xBB\xBF");
+
+    if (!empty($data[0])) {
+        // aqui se espera um array de arrays onde as chaves são a primeira linha da planilha
+        $keys = array_keys($data[0]);
+        fputcsv($out, $keys, ';');
+
+        // e os dados vêm nas linhas subsequentes
+        foreach ($data as $row) {
+            fputcsv($out, $row, ';');
+        }
+    } else {
+        // se for um array simples vamos exportar linha a linha sem cabecalho
+        foreach ($data as $key=>$val) {
+            fputcsv($out, [$key,$val], ';');
+        }
     }
+
     fclose($out);
 });
 
