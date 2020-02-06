@@ -23,12 +23,12 @@ Os endpoits retornam json por padrão mas é possivel retornar outro formato
 * csv = para uso no excel
 * json = json formatado
 
-http://servidor/endpoint?format=csv
+http://servidor/evasao/endpoint?format=csv
 
 ## Endpoints
 
-* status	"http://143.107.233.112/git/uspdev/evasao-ws/public/status"
-* listarIngressantes	"http://143.107.233.112/git/uspdev/evasao-ws/public/listarIngressantes/{ano}"
-* listarRespostasQuestionarioFuvest	"http://143.107.233.112/git/uspdev/evasao-ws/public/listarRespostasQuestionarioFuvest/{nusp}, {codqtn}"
-* listarHabilitacoes	"http://143.107.233.112/git/uspdev/evasao-ws/public/listarHabilitacoes/{codpes}"
-* obterHistorico	"http://143.107.233.112/git/uspdev/evasao-ws/public/obterHistorico/{codpes}, {codpgm}"
+* status	"http://servidor/evasao/status"
+* listarIngressantes	"http://servidor/evasao/listarIngressantes/{ano}"
+* listarRespostasQuestionarioFuvest	"http://servidor/evasao/listarRespostasQuestionarioFuvest/{nusp}, {codqtn}"
+* listarHabilitacoes	"http://servidor/evasao/listarHabilitacoes/{codpes}"
+* obterHistorico	"http://servidor/evasao/obterHistorico/{codpes}, {codpgm}"
