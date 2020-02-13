@@ -14,8 +14,7 @@ if (getenv('AMBIENTE') == 'dev') {
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
     //Flight::set('flight.handle_errors', false);
-}
-;
+};
 
 # Variáveis obrigatórias
 $dotenv->required('REPLICADO_HOST')->notEmpty();
@@ -24,8 +23,15 @@ $dotenv->required('CODCLG')->notEmpty();
 // vamos ajustar os caminhos baseados no arquivo de configuracao
 // dessa forma não precisamos recorrer ao RewriteBase do apache
 // e podemos usar um .htaccess que não depende do deploy
-Flight::request()->base = parse_url(getenv('DOMINIO'), PHP_URL_PATH);
-Flight::request()->url = str_replace(Flight::request()->base, '', Flight::request()->url);
+
+putenv(__DIR__ . '/../' . getenv('REPLICADO_PATHLOG'));
+
+//print_r(Flight::request());
+
+//Flight::request()->base = parse_url(getenv('DOMINIO'), PHP_URL_PATH);
+//Flight::request()->url = str_replace(Flight::request()->base, '', Flight::request()->url);
+
+//print_r(Flight::request());exit;
 
 // vamos imprimir o json formatado para humanos lerem
 Flight::map('jsonf', function ($data) {
@@ -53,8 +59,8 @@ Flight::map('csv', function ($data) {
         }
     } else {
         // se for um array simples vamos exportar linha a linha sem cabecalho
-        foreach ($data as $key=>$val) {
-            fputcsv($out, [$key,$val], ';');
+        foreach ($data as $key => $val) {
+            fputcsv($out, [$key, $val], ';');
         }
     }
 
