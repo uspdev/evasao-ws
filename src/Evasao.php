@@ -30,18 +30,22 @@ class Evasao
 
         $sql = "SELECT *
         FROM PROGRAMAGR AS p, HABILPROGGR AS h, CURSOGR AS c
-        WHERE datepart(year,p.dtaing) = $ano
+        WHERE datepart(year,p.dtaing) = :ano
             AND p.codpes = h.codpes
             AND h.codcur = c.codcur
             AND p.codpgm = h.codpgm
-            AND c.codclg IN ($codclg)
+            AND c.codclg IN ( $codclg )
             AND p.tiping NOT IN ('Especial')
         ORDER BY h.codcur, h.codhab";
+        $params['ano'] = $ano;
+        //$params['codclg'] = $codclg; // nao podemos passar uma lista como binding
+        //https://stackoverflow.com/questions/920353/can-i-bind-an-array-to-an-in-condition
 
-        $list = DB::fetchAll($sql);
+        $list = DB::fetchAll($sql, $params);
         $list = Uteis::trim_recursivo($list);
         //print_r($list);exit;
 
+        $ret = [];
         $filtro['dtaini'] = $ano;
         foreach ($list as $r) {
             $arr = [];
