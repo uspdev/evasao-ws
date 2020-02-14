@@ -2,12 +2,24 @@
 require_once '../app/bootstrap.php';
 
 use Uspdev\Evasao\Ws;
+use Uspdev\Evasao\Auth;
 
 // Controller padrão
 //$ws = new Uspdev\Evasao\Ws;
 
 # Instanciando biblioteca de cache
 //$c = new Uspdev\Cache\Cache($ws);
+
+Flight::route('*', function() {
+
+    // controlando acesso por IP, se IP_ACCESS_LIST estiver definido
+    if (Auth::ipControl()) {
+        return true;
+    } else {
+        Flight::forbidden();
+    }
+
+});
 
 // na raiz vamos colocar os controllers disponiveis
 Flight::route('/', function () use ($controllers) {
@@ -21,14 +33,14 @@ Flight::route('/', function () use ($controllers) {
 Flight::route('GET /@controlador:[a-z]+(/@metodo:[a-z]+(/@param1))',
     function ($controlador, $metodo, $param1) use ($controllers) {
 
-        // se o controlador passado nao existe
+        // se o controlador passado nao existir
         if (empty($controllers[$controlador])) {
             Flight::notFound('Controlador inexistente');
         }
 
         $ctrl = new $controllers[$controlador];
 
-        // se nao foi passado metodo vamos mostrar a lista de metodos
+        // se nao foi passado metodo vamos mostrar a lista de metodos publicos
         if (empty($metodo)) {
             $out = Ws::metodos($ctrl);
             Flight::jsonf($out);
