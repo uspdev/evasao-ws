@@ -24,7 +24,7 @@ $dotenv->required('CODCLG')->notEmpty();
 // dessa forma não precisamos recorrer ao RewriteBase do apache
 // e podemos usar um .htaccess que não depende do deploy
 
-putenv(__DIR__ . '/../' . getenv('REPLICADO_PATHLOG'));
+putenv('REPLICADO_PATHLOG='.__DIR__ . '/../' . getenv('REPLICADO_PATHLOG'));
 
 //print_r(Flight::request());
 
