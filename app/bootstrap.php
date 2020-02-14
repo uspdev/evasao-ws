@@ -7,24 +7,25 @@ $dotenv->load();
 
 # Enquanto não adequamos o cache para env vamos definir a constante que
 # desabilita aqui. Pois em fase de teste não queremos usar cache
-define('USPDEV_CACHE_DISABLE', true);
+define('USPDEV_CACHE_DISABLE', getenv('USPDEV_CACHE_DISABLE'));
 
 if (getenv('AMBIENTE') == 'dev') {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
     //Flight::set('flight.handle_errors', false);
-};
+}
 
 # Variáveis obrigatórias
 $dotenv->required('REPLICADO_HOST')->notEmpty();
 $dotenv->required('CODCLG')->notEmpty();
 
+// no .env o caminho do log é baseado na reaiz do sistema. Vamos ajustar para refletir essa ideia
+putenv('REPLICADO_PATHLOG=' . __DIR__ . '/../' . getenv('REPLICADO_PATHLOG'));
+
 // vamos ajustar os caminhos baseados no arquivo de configuracao
 // dessa forma não precisamos recorrer ao RewriteBase do apache
 // e podemos usar um .htaccess que não depende do deploy
-
-putenv('REPLICADO_PATHLOG='.__DIR__ . '/../' . getenv('REPLICADO_PATHLOG'));
 
 //print_r(Flight::request());
 

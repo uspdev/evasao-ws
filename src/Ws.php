@@ -4,7 +4,6 @@ class Ws
 {
     public static function metodos($obj)
     {
-        //$ws = new SELF;
         $metodos = get_class_methods($obj);
 
         $classe = get_class($obj);
@@ -31,5 +30,13 @@ class Ws
             }
         }
         return $api;
+    }
+
+    public static function status()
+    {
+        $out['colegiados'] = getenv('CODCLG');
+        $out['cache'] = getenv('USPDEV_CACHE_DISABLE') ? 'desabilitado' : 'habilitado';
+
+        return $out;
     }
 }
