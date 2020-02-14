@@ -36,6 +36,7 @@ class Ws
     {
         $out['colegiados'] = getenv('CODCLG');
         $out['cache'] = getenv('USPDEV_CACHE_DISABLE') ? 'desabilitado' : 'habilitado';
+        $out['ip_control'] = getenv('IP_CONTROL') ? 'habilitado' : 'desabilitado';
 
         return $out;
     }
