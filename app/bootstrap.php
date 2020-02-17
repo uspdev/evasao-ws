@@ -21,7 +21,7 @@ $dotenv->required('REPLICADO_HOST')->notEmpty();
 $dotenv->required('CODCLG')->notEmpty();
 
 // no .env o caminho do log é baseado na reaiz do sistema. Vamos ajustar para refletir essa ideia
-putenv('REPLICADO_PATHLOG=' . __DIR__ . '/../' . getenv('REPLICADO_PATHLOG'));
+putenv('REPLICADO_PATHLOG=' . __DIR__ . '/../local/' . getenv('REPLICADO_PATHLOG'));
 
 // vamos ajustar os caminhos baseados no arquivo de configuracao
 // dessa forma não precisamos recorrer ao RewriteBase do apache
