@@ -1,5 +1,7 @@
 <?php namespace Uspdev\Evasao;
 
+use Uspdev\Evasao\Auth;
+
 class Ws
 {
     public static function metodos($obj)
@@ -39,5 +41,22 @@ class Ws
         $out['ip_control'] = getenv('IP_CONTROL') ? 'habilitado' : 'desabilitado';
 
         return $out;
+    }
+
+    public static function login()
+    {
+        $auth = new Auth();
+        if ($auth->login()) {
+            return ['msg' => $auth->msg];
+        } else {
+            \Flight::unauthorized($auth->msg);
+        }
+    }
+
+    public static function logout()
+    {
+        $auth = new Auth();
+        $auth->logout();
+        \Flight::unauthorized($auth->msg);
     }
 }
