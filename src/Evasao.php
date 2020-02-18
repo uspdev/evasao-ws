@@ -5,14 +5,6 @@ use Uspdev\Replicado\Uteis;
 
 class Evasao
 {
-    public static function status()
-    {
-        $out['colegiados'] = getenv('CODCLG');
-        $out['cache'] = getenv('USPDEV_CACHE_DISABLE') ? 'desabilitado' : 'habilitado';
-
-        return $out;
-    }
-
     /**
      * listarIngressantes - lista ingressantes nos colegiados definidos no ambiente
      *
