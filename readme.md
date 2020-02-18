@@ -11,7 +11,7 @@ Provê dados para análise de evasão de cursos de graduação
 
 Copie o .env.example para .env e faça as alterações necessárias
 
-    cp .env.exampl .env
+    cp .env.example .env
 
 Instale as dependências do composer
 
@@ -27,7 +27,6 @@ http://servidor/evasao/endpoint?format=csv
 
 ## Endpoints
 
-* status	"http://servidor/evasao/status"
 * listarIngressantes	"http://servidor/evasao/listarIngressantes/{ano}"
 * listarRespostasQuestionarioFuvest	"http://servidor/evasao/listarRespostasQuestionarioFuvest/{nusp}, {codqtn}"
 * listarHabilitacoes	"http://servidor/evasao/listarHabilitacoes/{codpes}"
