@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/controllers.php';
+require_once __DIR__ . '/config.php';
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
@@ -37,6 +37,7 @@ putenv('REPLICADO_PATHLOG=' . __DIR__ . '/../local/' . getenv('REPLICADO_PATHLOG
 // vamos imprimir o json formatado para humanos lerem
 Flight::map('jsonf', function ($data) {
     Flight::json($data, 200, true, 'utf-8', JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    Flight::stop();
 });
 
 // vamos imprimir a saida em csv
@@ -64,8 +65,8 @@ Flight::map('csv', function ($data) {
             fputcsv($out, [$key, $val], ';');
         }
     }
-
     fclose($out);
+
 });
 
 // vamos sobrescrever a mensagem de not found para ficar mais compatível com a API
@@ -82,6 +83,13 @@ Flight::map('notFound', function ($msg = null) {
 Flight::map('forbidden', function ($msg = null) {
     $data['message'] = empty($msg) ? 'Forbidden' : $msg;
     $data['documentation_url'] = getenv('DOMINIO') . '/';
-    $json = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    $json = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     Flight::halt(403, $json);
+});
+
+Flight::map('unauthorized', function ($msg = null) {
+    $data['message'] = empty($msg) ? 'unauthorized' : $msg;
+    $data['documentation_url'] = getenv('DOMINIO') . '/';
+    $json = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    Flight::halt(401, $json);
 });
