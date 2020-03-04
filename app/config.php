@@ -1,8 +1,5 @@
 <?php
 
-# Ips autorizados
-define('IP_ACCESS_LIST_FILE', __DIR__.'/../local/ip_access_list.txt');
-
 # Usuários com acesso ao sistema 
 define('PWD_FILE', __DIR__.'/../local/users.txt');
 

@@ -24,13 +24,14 @@ class Auth
         }
     }
 
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
     public function auth()
     {
-
-        // header('Access-Control-Allow-Origin: *');
-        // header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-        // header('Access-Control-Allow-Headers: authorization');
-
+        // se não houver usuário vamos negar acesso
         if (!isset($_SERVER['PHP_AUTH_USER'])) {
             return false;
         }
@@ -82,33 +83,5 @@ class Auth
         //header('HTTP/1.0 401 Unauthorized');
         //exit;
         //die('logout');
-    }
-
-    // Controle de acesso por IP
-    public static function ipControl($ipfile)
-    {
-        // vamos ler o arquivo de endereços autorizados
-        if (($handle = fopen($ipfile, 'r')) !== false) {
-            while (($row = fgetcsv($handle, 1000, ',')) !== false) {
-                
-                // e ver se o ip está na lista
-                // https://stackoverflow.com/questions/2869893/block-specific-ip-block-from-my-website-in-php
-                $network = ip2long($row[0]);
-                $prefix = (int) $row[1];
-                $ip = ip2long($_SERVER['REMOTE_ADDR']);
-
-                if ($network >> (32 - $prefix) == $ip >> (32 - $prefix)) {
-                    // Se sim, vamos liberar o acesso
-                    fclose($handle);
-                    return true;
-                }
-            }
-            fclose($handle);
-            // aqui vamos negar o acesso
-            return false;
-        } else {
-            echo 'Erro ao ler arquivo '.$ipfile;
-            exit;
-        }
     }
 }

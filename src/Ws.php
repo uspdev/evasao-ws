@@ -1,6 +1,7 @@
 <?php namespace Uspdev\Evasao;
 
 use Uspdev\Evasao\Auth;
+use Uspdev\Ipcontrol\Ipcontrol;
 
 class Ws
 {
@@ -38,7 +39,14 @@ class Ws
     {
         $out['colegiados'] = getenv('CODCLG');
         $out['cache'] = getenv('USPDEV_CACHE_DISABLE') ? 'desabilitado' : 'habilitado';
-        $out['ip_control'] = getenv('IP_CONTROL') ? 'habilitado' : 'desabilitado';
+        
+        $out['meu ip'] = $_SERVER['REMOTE_ADDR'];
+        $out['ip_control'] = getenv('USPDEV_IP_CONTROL');
+        if ($out['ip_control'] == 'whitelist') {
+            $out['ip_list'] = Ipcontrol::getIpList(getenv('USPDEV_IP_CONTROL_FILE'));
+        }
+        $auth = new Auth();
+        $out['usuarios'] = array_keys($auth->getUsers());
 
         return $out;
     }

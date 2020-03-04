@@ -3,19 +3,13 @@ require_once '../app/bootstrap.php';
 
 use Uspdev\Evasao\Auth;
 use Uspdev\Evasao\Ws;
+use Uspdev\Ipcontrol\Ipcontrol;
+
+// limitando acesso por IP, se estiver habilitado
+Ipcontrol::proteger();
 
 Flight::route('*', function () {
-
-    // limitando acesso por IP, se estiver habilitado
-    if (getenv('IP_CONTROL')) {
-        if (!Auth::ipControl(IP_ACCESS_LIST_FILE)) {
-            Flight::forbidden();
-        }
-    }
-
-    // se passar pelos dois ifs então o IP está liberado
     return true;
-
 });
 
 // na raiz vamos colocar os controllers disponiveis, menos o de administração que fica oculto
