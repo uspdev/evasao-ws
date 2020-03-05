@@ -1,13 +1,13 @@
 <?php
 require_once '../app/bootstrap.php';
 
-use Uspdev\Evasao\Auth;
 use Uspdev\Evasao\Ws;
 use Uspdev\Ipcontrol\Ipcontrol;
 
-// limitando acesso por IP, se estiver habilitado
+// limitando acesso por IP, se estiver habilitado, antes de tudo
 Ipcontrol::proteger();
 
+// não temos nada aqui por enquanto
 Flight::route('*', function () {
     return true;
 });
@@ -26,20 +26,14 @@ Flight::route('/', function () use ($controllers) {
 Flight::route('GET /' . $mgmt_route . '(/@metodo:[a-z]+(/@param1))', function ($metodo, $param1) use ($mgmt_class) {
 
     // vamos verificar se o usuário é valido
-    $auth = new Auth();
-    if (!$auth->auth()) {
-        $auth->logout();
-        if (!$auth->login()) {
-            Flight::unauthorized($auth->msg);
-        }
-    }
+    Flight::auth();
 
     $ctrl = new $mgmt_class();
     if (empty($metodo)) {
         // se nao foi passado metodo vamos mostrar a lista de metodos publicos
         $out = Ws::metodos($ctrl);
     } else {
-        // se foi passado vamos chama-lo
+        // se foi passado vamos chamá-lo
         $out = $ctrl->$metodo($param1);
     }
     Flight::jsonf($out);
@@ -50,13 +44,7 @@ Flight::route('GET /' . $mgmt_route . '(/@metodo:[a-z]+(/@param1))', function ($
 Flight::route('GET /@controlador:[a-z]+(/@metodo:[a-z]+(/@param1))', function ($controlador, $metodo, $param1) use ($controllers) {
 
     // vamos verificar se o usuário é valido
-    $auth = new Auth();
-    if (!$auth->auth()) {
-        $auth->logout();
-        if (!$auth->login()) {
-            Flight::unauthorized($auth->msg);
-        }
-    }
+    Flight::auth();
 
     // se o controlador passado nao existir
     if (empty($controllers[$controlador])) {

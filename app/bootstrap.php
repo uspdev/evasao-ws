@@ -2,6 +2,8 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/config.php';
 
+use Uspdev\Evasao\Auth;
+
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
@@ -34,10 +36,15 @@ putenv('REPLICADO_PATHLOG=' . __DIR__ . '/../local/' . getenv('REPLICADO_PATHLOG
 
 //print_r(Flight::request());exit;
 
-// vamos imprimir o json formatado para humanos lerem
-Flight::map('jsonf', function ($data) {
-    Flight::json($data, 200, true, 'utf-8', JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    Flight::stop();
+// vamos verificar se o usuário está autenticado
+Flight::map('auth', function () {
+    $auth = new Auth();
+    if (!$auth->auth()) {
+        $auth->logout();
+        if (!$auth->login()) {
+            Flight::unauthorized($auth->msg);
+        }
+    }
 });
 
 // vamos imprimir a saida em csv
@@ -66,7 +73,12 @@ Flight::map('csv', function ($data) {
         }
     }
     fclose($out);
+});
 
+// vamos imprimir o json formatado para humanos lerem
+Flight::map('jsonf', function ($data) {
+    Flight::json($data, 200, true, 'utf-8', JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    Flight::stop();
 });
 
 // vamos sobrescrever a mensagem de not found para ficar mais compatível com a API
