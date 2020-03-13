@@ -11,7 +11,7 @@
 		"ext-pdo" : "*",
 		"uspdev/replicado": "^1",
 		"mikecao/flight": "^1.3",
-        "uspdev/cache": "^0.5",
+        "uspdev/cache": "^0.6",
         "vlucas/phpdotenv" : "^4",
         "uspdev/ip-control": "^0.1"
 	},

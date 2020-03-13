@@ -7,10 +7,6 @@ use Uspdev\Evasao\Auth;
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
-# Enquanto não adequamos o cache para env vamos definir a constante que
-# desabilita aqui. Pois em fase de teste não queremos usar cache
-define('USPDEV_CACHE_DISABLE', getenv('USPDEV_CACHE_DISABLE'));
-
 if (getenv('AMBIENTE') == 'dev') {
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
