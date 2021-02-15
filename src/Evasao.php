@@ -79,7 +79,6 @@ class Evasao
         } else {
             $questionarios = json_decode(json_encode([['codqtn' => $codqtn]]), false);
         }
-        //print_r($questionarios);//exit;
 
         $ret = [];
         foreach ($questionarios as $q) {
@@ -125,7 +124,7 @@ class Evasao
         $codpgm = ($codpgm) ? $codpgm : SELF::listarProgramasHistorico($codpes);
 
         $sql = "SELECT SUBSTRING(h.codtur, 1, 5) AS semestre, *
-        FROM histescolargr AS h
+        FROM HISTESCOLARGR AS h
         WHERE codpes= :codpes
             AND codpgm = :codpgm
         ORDER BY codpgm, semestre, dtacrihst";
@@ -134,6 +133,8 @@ class Evasao
         $param['codpgm'] = $codpgm;
 
         $list = DB::fetchAll($sql, $param);
+
+        //print_r($list);exit;
         $list = Uteis::utf8_converter($list);
         $list = Uteis::trim_recursivo($list);
         $ret = [];
@@ -154,10 +155,10 @@ class Evasao
     public function listarHabilitacoes($codpes)
     {
         $sql = "SELECT c.nomcur, hg.nomhab, cl.nomabvclg ,h.*
-        FROM habilproggr AS h
-        INNER JOIN cursogr AS c ON h.codcur = c.codcur
-        INNER JOIN habilitacaogr AS hg ON h.codcur = hg.codcur AND h.codhab = hg.codhab
-        INNER JOIN colegiado as cl ON c.codclg = cl.codclg and cl.sglclg = 'CG'
+        FROM HABILPROGGR AS h
+        INNER JOIN CURSOGR AS c ON h.codcur = c.codcur
+        INNER JOIN HABILITACAOGR AS hg ON h.codcur = hg.codcur AND h.codhab = hg.codhab
+        INNER JOIN COLEGIADO as cl ON c.codclg = cl.codclg and cl.sglclg = 'CG'
         --INNER JOIN programagr AS p ON h.codpes = p.codpes AND h.codpgm = p.codpgm
         WHERE h.codpes = :codpes
         ORDER BY h.dtaini";
@@ -199,7 +200,7 @@ class Evasao
     {
         // vamos usar um intervalo para dtaing pois pode divergir em relação ao dtaini
         // possivelemnte por conta de data de cadastro
-        $sql = "SELECT * FROM programagr
+        $sql = "SELECT * FROM PROGRAMAGR
         WHERE codpes = :codpes
             AND dtaing >= DATEADD(DAY, -2, :dtaini)
             AND dtaing <= DATEADD(DAY, 4, :dtaini)
@@ -261,7 +262,7 @@ class Evasao
     private static function listarQuestionariosRespondidos($codpes)
     {
         $sql = 'SELECT DISTINCT codqtn
-        FROM respostasquestao
+        FROM RESPOSTAQUESTAO
         WHERE codpes = :codpes';
         $params['codpes'] = $codpes;
 
