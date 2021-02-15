@@ -34,6 +34,8 @@ class Evasao
         //https://stackoverflow.com/questions/920353/can-i-bind-an-array-to-an-in-condition
 
         $list = DB::fetchAll($sql, $params);
+        //print_r($list);exit;
+        $list = Uteis::utf8_converter($list);
         $list = Uteis::trim_recursivo($list);
         //print_r($list);exit;
 
@@ -132,6 +134,7 @@ class Evasao
         $param['codpgm'] = $codpgm;
 
         $list = DB::fetchAll($sql, $param);
+        $list = Uteis::utf8_converter($list);
         $list = Uteis::trim_recursivo($list);
         $ret = [];
         foreach ($list as $row) {
@@ -162,6 +165,7 @@ class Evasao
         $param['codpes'] = $codpes;
 
         $list = DB::fetchAll($sql, $param);
+        $list = Uteis::utf8_converter($list);
         $list = Uteis::trim_recursivo($list);
 
         $ret = [];
