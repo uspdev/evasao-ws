@@ -34,10 +34,6 @@ class Evasao
         //https://stackoverflow.com/questions/920353/can-i-bind-an-array-to-an-in-condition
 
         $list = DB::fetchAll($sql, $params);
-        //print_r($list);exit;
-        $list = Uteis::utf8_converter($list);
-        $list = Uteis::trim_recursivo($list);
-        //print_r($list);exit;
 
         $ret = [];
         $filtro['dtaini'] = $ano;
@@ -77,14 +73,14 @@ class Evasao
         if (empty($codqtn)) {
             $questionarios = SELF::listarQuestionariosRespondidos($nusp);
         } else {
-            $questionarios = json_decode(json_encode([['codqtn' => $codqtn]]), false);
+            $questionarios = (obj) [['codqtn' => $codqtn]];
         }
 
         $ret = [];
         foreach ($questionarios as $q) {
             $arr = [];
             $respostas = SELF::listarRespostas($nusp, $q['codqtn']);
-
+            $ret1 = [];
             foreach ($respostas as $r) {
                 $arr['identificacao'] = $nusp;
                 $arr['cod_questionario'] = $r['codqtn'];
@@ -106,8 +102,10 @@ class Evasao
 
                 $ret1[] = $arr;
             }
-            $ret[] = $ret1;
+            $ret[$q['codqtn']] = $ret1;
+            unset($ret1);
         }
+        
         return $ret;
     }
 
@@ -134,9 +132,6 @@ class Evasao
 
         $list = DB::fetchAll($sql, $param);
 
-        //print_r($list);exit;
-        $list = Uteis::utf8_converter($list);
-        $list = Uteis::trim_recursivo($list);
         $ret = [];
         foreach ($list as $row) {
             unset($row['timestamp']);
@@ -166,8 +161,6 @@ class Evasao
         $param['codpes'] = $codpes;
 
         $list = DB::fetchAll($sql, $param);
-        $list = Uteis::utf8_converter($list);
-        $list = Uteis::trim_recursivo($list);
 
         $ret = [];
         foreach ($list as $row) {
@@ -262,10 +255,12 @@ class Evasao
     private static function listarQuestionariosRespondidos($codpes)
     {
         $sql = 'SELECT DISTINCT codqtn
-        FROM RESPOSTAQUESTAO
+        FROM RESPOSTASQUESTAO
         WHERE codpes = :codpes';
         $params['codpes'] = $codpes;
 
-        return DB::fetchAll($sql, $params);
+
+        $list = DB::fetchAll($sql, $params);
+        return $list;
     }
 }
